@@ -1,6 +1,8 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
+import { ToastContainer, toast } from "react-toastify";
+
 
 const EditRecipe = () => {
   const { id } = useParams();
@@ -29,6 +31,11 @@ const EditRecipe = () => {
   const handleCreateRecipe = async (e) => {
     e.preventDefault();
 
+    const proceed = window.confirm("Are you sure you want to proceed?");
+    if (!proceed) {
+      return;
+    }
+
     const form = e.target;
 
     const title = form.title.value;
@@ -43,11 +50,18 @@ const EditRecipe = () => {
       description,
     };
 
-    await axios.patch(`http://localhost:3000/recipes/${id}`, recipeData);
+    try {
+      await axios.patch(`http://localhost:3000/recipes/${id}`, recipeData);
+      toast.success("Recipe updated successfully!");
+    } catch (error) {
+      toast.error("Failed to update the recipe.");
+    }
   };
+
   return (
-    <div className="w-full px-16">
-      <h1 className="text-4xl mb-4">Add Recipe</h1>
+    <div className="w-full bg-blue-200 px-16">
+      <ToastContainer />
+      <h1 className="text-4xl mb-4">Edit Recipe</h1>
       <form onSubmit={handleCreateRecipe} className="w-full">
         <div className="mb-4">
           <label htmlFor="">Title </label>
@@ -68,7 +82,7 @@ const EditRecipe = () => {
           />
         </div>
         <div className="mb-4">
-          <label htmlFor="">Cateogry </label>
+          <label htmlFor="">Category </label>
           <select name="category" id="" className="w-full py-3 px-5 border">
             {categories?.map((category) => (
               <option
@@ -94,7 +108,7 @@ const EditRecipe = () => {
         <div className="mb-4">
           <input
             type="submit"
-            value={"Add Recipe"}
+            value={"Update Recipe"}
             className="w-full btn py-3 px-5 border btn-neutral"
           />
         </div>

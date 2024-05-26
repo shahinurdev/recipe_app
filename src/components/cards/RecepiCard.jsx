@@ -3,7 +3,7 @@ import pizza from "../../assets/pizza.webp";
 
 export default function RecepiCard({ recipe }) {
   return (
-    <div className="card  bg-base-100 shadow-xl">
+    <div className="card  bg-lime-200 shadow-xl">
       <figure>
         <img src={pizza} alt="food" className="max-w-50" />
       </figure>

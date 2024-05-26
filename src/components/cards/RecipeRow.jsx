@@ -1,7 +1,28 @@
-import { Link } from "react-router-dom";
+
+import { Link } from 'react-router-dom';
+import { toast } from 'react-toastify';
+
 
 /* eslint-disable react/prop-types */
-export default function RecipeRow({ recipe }) {
+export default function RecipeRow({ recipe, onDelete }) {
+  const handleDelete = async () => {
+    const confirmed = window.confirm('Are you sure you want to delete this recipe?');
+    if (confirmed) {
+      try {
+        const response = await fetch(`http://localhost:3000/recipes/${recipe.id}`, {
+          method: 'DELETE',
+        });
+        if (response.ok) {
+          onDelete(recipe.id);
+        } else {
+          toast.error('Failed to delete recipe. Please try again.');
+        }
+      } catch (error) {
+        toast.error('An error occurred. Please try again.');
+      }
+    }
+  };
+
   return (
     <tr>
       <th>{recipe?.id}</th>
@@ -15,8 +36,14 @@ export default function RecipeRow({ recipe }) {
         >
           Edit
         </Link>
-        <button className="btn btn-xs btn-error">Delete</button>
+        <button 
+          className="btn btn-xs btn-error" 
+          onClick={handleDelete}
+        >
+          Delete
+        </button>
       </td>
     </tr>
   );
 }
+
